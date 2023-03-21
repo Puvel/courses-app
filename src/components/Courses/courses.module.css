@@ -1,0 +1,12 @@
+.courses {
+	min-height: 80vh;
+	border: 1px solid #8cafbf;
+	padding: 20px;
+}
+
+.coursesSearch {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	margin-bottom: 20px;
+}

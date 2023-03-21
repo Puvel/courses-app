@@ -1,0 +1,30 @@
+.authors {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-bottom: 15px;
+}
+
+.authorsTitle {
+	align-self: center;
+	font-size: 16px;
+	margin-bottom: 15px;
+}
+
+.authorsList {
+	margin-bottom: 15px;
+}
+
+.authorsItem {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-right: 25%;
+}
+.authorsItem:not(:last-child) {
+	margin-bottom: 10px;
+}
+
+.authorsEmpty {
+	align-self: center;
+}

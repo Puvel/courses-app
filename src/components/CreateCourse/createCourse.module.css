@@ -1,0 +1,79 @@
+.createCourse {
+	border: 1px solid #8cafbf;
+	padding: 20px;
+}
+
+.createCourseTitleContainer {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	margin-bottom: 15px;
+}
+
+.createCourseInputTitle {
+	display: flex;
+	flex-direction: column;
+	width: 30%;
+}
+
+.createCourseDescription {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 15px;
+}
+
+.createCourseAuthorsWrap {
+	display: flex;
+	justify-content: space-between;
+}
+
+.createCourseAuthors {
+	width: 48%;
+}
+
+.createAuthor {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 15px;
+}
+.createAuthorTitle {
+	font-size: 16px;
+	margin-bottom: 15px;
+}
+
+.createAuthorInput {
+	display: flex;
+	flex-direction: column;
+	align-self: stretch;
+	margin-bottom: 15px;
+}
+
+.createCourseDuration {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.createCourseDurationTitle {
+	font-size: 16px;
+	margin-bottom: 15px;
+}
+
+.createCourseDurationInput {
+	display: flex;
+	flex-direction: column;
+	align-self: stretch;
+	margin-bottom: 15px;
+}
+
+.createCourseDurationText {
+	font-size: 24px;
+	align-self: flex-start;
+}
+
+.createCourseDurationValue {
+	font-size: 28px;
+	font-weight: 600;
+	margin: 0 5px;
+}

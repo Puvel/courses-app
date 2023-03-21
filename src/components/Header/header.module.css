@@ -1,0 +1,15 @@
+.header {
+	padding: 20px;
+	display: flex;
+	justify-content: space-between;
+	border: 1px solid #ff6347;
+	margin-bottom: 20px;
+}
+
+.header_user_info {
+	display: flex;
+	align-items: center;
+}
+.header_user_name {
+	margin-right: 10px;
+}

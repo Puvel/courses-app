@@ -1,0 +1,13 @@
+.searchBar {
+	width: 40%;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+
+.searchBarInputWrap {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-right: 10px;
+}
