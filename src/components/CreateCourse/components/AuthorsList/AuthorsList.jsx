@@ -14,16 +14,14 @@ export const AuthorsList = ({
 		<h5 className={style.authorsTitle}>{title}</h5>
 		{authors.length ? (
 			<ul className={style.authorsList}>
-				{authors.map((author) => {
-					return (
-						<li key={author.id} className={style.authorsItem}>
-							<p>{author.name}</p>
-							<Button onClick={authorBtnClick} data-id={author.id}>
-								{authorBtnText}
-							</Button>
-						</li>
-					);
-				})}
+				{authors.map((author) => (
+					<li key={author.id} className={style.authorsItem}>
+						<p>{author.name}</p>
+						<Button onClick={authorBtnClick} data-id={author.id}>
+							{authorBtnText}
+						</Button>
+					</li>
+				))}
 			</ul>
 		) : (
 			<p className={style.authorsEmpty}>Author list is empty</p>

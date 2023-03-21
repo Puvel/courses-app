@@ -8,6 +8,12 @@ import { pipeDuration } from 'helpers/pipeDuration';
 import { dateGenerator } from 'helpers/dateGenerator';
 import { fieldsValidation } from 'helpers/fieldsValidation';
 import { Context } from 'context/context';
+import {
+	INPUT_TITLE_ID,
+	INPUT_DESCRIPTION_ID,
+	INPUT_DURATION_ID,
+	INPUT_AUTHOR_ID,
+} from 'constants';
 
 import style from './createCourse.module.css';
 
@@ -20,12 +26,19 @@ export const CreateCourse = () => {
 	const [courseAuthor, setCourseAuthor] = useState([]);
 	const [availableAuthors, setAvailableAuthors] = useState(authors);
 
+	const inputsStates = {
+		[INPUT_TITLE_ID]: setTitle,
+		[INPUT_DESCRIPTION_ID]: setDescription,
+		[INPUT_AUTHOR_ID]: setAuthor,
+		[INPUT_DURATION_ID]: setDuration,
+	};
+
 	const addAuthor = (e) => {
 		const author = availableAuthors.find(
 			(author) => author.id === e.target.dataset.id
 		);
 		if (author) {
-			setCourseAuthor((prevState) => [...prevState, author]);
+			setCourseAuthor([...courseAuthor, author]);
 			setAvailableAuthors((prevList) =>
 				prevList.filter((item) => item.id !== author.id)
 			);
@@ -37,36 +50,23 @@ export const CreateCourse = () => {
 			(author) => author.id === e.target.dataset.id
 		);
 		if (author) {
-			setAvailableAuthors((prevState) => [...prevState, author]);
+			setAvailableAuthors([...availableAuthors, author]);
 			setCourseAuthor((prevList) =>
 				prevList.filter((item) => item.id !== author.id)
 			);
 		}
 	};
 
-	const handleChange = (e) => {
-		const { name, value } = e.target;
-
-		switch (name) {
-			case 'title':
-				setTitle(value);
-				break;
-			case 'description':
-				setDescription(value);
-				break;
-			case 'author':
-				setAuthor(value);
-				break;
-			case 'duration':
-				if (!/^([0-9]\d*)$/.test(value) && value !== '') {
-					return;
-				}
-				setDuration(value);
-				break;
-
-			default:
-				return;
+	const handleChange = (ukey, { target: { value } }) => {
+		if (
+			!/^([0-9]\d*)$/.test(value) &&
+			value !== '' &&
+			ukey === INPUT_DURATION_ID
+		) {
+			return;
 		}
+
+		inputsStates[ukey](value);
 	};
 
 	const handleCreateAuthor = () => {
@@ -75,7 +75,7 @@ export const CreateCourse = () => {
 			return;
 		}
 		const newAuthor = createAuthor(author);
-		setAvailableAuthors((prevState) => [...prevState, newAuthor]);
+		setAvailableAuthors([...availableAuthors, newAuthor]);
 		setAuthor('');
 	};
 
@@ -109,7 +109,7 @@ export const CreateCourse = () => {
 						labelText='Title'
 						placeholder='Enter title...'
 						value={title}
-						onChange={handleChange}
+						onChange={(e) => handleChange(INPUT_TITLE_ID, e)}
 					/>
 				</div>
 
@@ -124,7 +124,7 @@ export const CreateCourse = () => {
 					labelText='Description'
 					placeholder='Enter description...'
 					value={description}
-					onChange={handleChange}
+					onChange={(e) => handleChange(INPUT_DESCRIPTION_ID, e)}
 				/>
 			</div>
 			<div className={style.createCourseAuthorsWrap}>
@@ -140,7 +140,7 @@ export const CreateCourse = () => {
 								labelText='Author name'
 								placeholder='Enter author name...'
 								value={author}
-								onChange={handleChange}
+								onChange={(e) => handleChange(INPUT_AUTHOR_ID, e)}
 							/>
 						</div>
 
@@ -157,7 +157,7 @@ export const CreateCourse = () => {
 								labelText='Duration'
 								placeholder='Enter duration in minutes...'
 								value={duration}
-								onChange={handleChange}
+								onChange={(e) => handleChange(INPUT_DURATION_ID, e)}
 							/>
 						</div>
 

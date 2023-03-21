@@ -10,9 +10,9 @@ export const SearchBar = () => {
 	const [search, setSearch] = useState('');
 	const { searchCourses } = useContext(Context);
 
-	const searchChange = (e) => {
-		setSearch(e.target.value);
-		if (!e.target.value.length) {
+	const searchChange = ({ target: { value } }) => {
+		setSearch(value);
+		if (!value.length) {
 			searchCourses();
 		}
 	};

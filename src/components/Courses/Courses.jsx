@@ -33,13 +33,14 @@ export const Courses = () => {
 
 	const createAuthor = (author) => {
 		const newAuthor = { id: uIdv4(), name: author };
-		setAuthors((prevState) => [...prevState, newAuthor]);
+		setAuthors([...authors, newAuthor]);
 		return newAuthor;
 	};
 
 	const createCourse = (data) => {
-		setCourses((prevState) => [...prevState, { ...data, id: uIdv4() }]);
-		setFoundCourses(courses);
+		const newCourse = { ...data, id: uIdv4() };
+		setCourses([...courses, newCourse]);
+		setFoundCourses([...courses, newCourse]);
 		setMode(false);
 	};
 
