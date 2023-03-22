@@ -1,0 +1,20 @@
+.input {
+	border: 1px solid #eed67e;
+	padding: 5px;
+}
+
+.textArea {
+	padding: 10px;
+	min-height: 100px;
+	border: 1px solid #ffff00;
+	resize: none;
+}
+
+.label {
+	margin-bottom: 5px;
+}
+
+.hide_label {
+	visibility: hidden;
+	font-size: 0;
+}

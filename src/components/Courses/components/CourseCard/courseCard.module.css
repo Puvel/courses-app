@@ -1,0 +1,32 @@
+.course {
+	display: flex;
+	align-items: flex-start;
+	border: 1px solid #aed6c5;
+	padding: 20px;
+}
+
+.course:not(:last-child) {
+	margin-bottom: 20px;
+}
+
+.course_description_wrap {
+	width: 70%;
+	margin-right: 5%;
+}
+.course_info_wrap {
+	max-width: 24%;
+}
+
+.course_title {
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+
+.course_author,
+.course_duration,
+.course_date {
+	margin-bottom: 10px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
