@@ -1,0 +1,46 @@
+.loginForm {
+	padding-top: 75px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.loginTitle {
+	font-size: 24px;
+	margin-bottom: 15px;
+}
+
+.loginFormInput {
+	min-width: 250px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 15px;
+}
+
+.loginFormPassword {
+	position: relative;
+}
+.loginRedirect {
+	margin-top: 15px;
+}
+
+.loginRedirectText {
+	margin-right: 5px;
+}
+
+.showPassBtn {
+	border: none;
+	background-color: transparent;
+	position: absolute;
+	bottom: 0;
+	right: -29px;
+	width: 24px;
+	height: 24px;
+	background: url('./eye.svg') no-repeat center;
+	background-size: contain;
+}
+
+.showPassBtn:hover {
+	cursor: pointer;
+	filter: brightness(0.7);
+}

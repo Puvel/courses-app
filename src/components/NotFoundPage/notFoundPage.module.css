@@ -1,0 +1,22 @@
+.notFoundWrap {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.notFoundImage {
+	max-height: 500px;
+}
+
+.notFoundTextWrap {
+	text-align: center;
+}
+
+.notFoundTextWrap {
+	text-align: center;
+}
+
+.notFoundTitle {
+	font-size: 36px;
+	margin-bottom: 15px;
+}

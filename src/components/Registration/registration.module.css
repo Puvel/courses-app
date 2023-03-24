@@ -1,0 +1,47 @@
+.registrationForm {
+	padding-top: 75px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.registrationTitle {
+	font-size: 24px;
+	margin-bottom: 15px;
+}
+
+.registrationFormInput {
+	min-width: 250px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 15px;
+}
+
+.registrationFormPassword {
+	position: relative;
+}
+
+.registrationRedirect {
+	margin-top: 15px;
+}
+
+.registrationRedirectText {
+	margin-right: 5px;
+}
+
+.showPassBtn {
+	border: none;
+	background-color: transparent;
+	position: absolute;
+	bottom: 0;
+	right: -29px;
+	width: 24px;
+	height: 24px;
+	background: url('./eye.svg') no-repeat center;
+	background-size: contain;
+}
+
+.showPassBtn:hover {
+	cursor: pointer;
+	filter: brightness(0.7);
+}
