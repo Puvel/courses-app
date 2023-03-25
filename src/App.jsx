@@ -15,6 +15,7 @@ import {
 	REGISTRATION_PATH,
 	COURSES_PATH,
 	COURSE_PATH,
+	ERROR_PATH,
 	CREATE_COURSE_PATH,
 	mockedCoursesList,
 	mockedAuthorsList,
@@ -121,7 +122,11 @@ export const App = () => {
 							)
 						}
 					/>
-					<Route path='*' element={<NotFoundPage />} />
+					<Route path={`/${ERROR_PATH}`} element={<NotFoundPage />} />
+					<Route
+						path='*'
+						element={<Navigate to={`/${ERROR_PATH}`} replace={true} />}
+					/>
 				</Route>
 			</Routes>
 		</Context.Provider>

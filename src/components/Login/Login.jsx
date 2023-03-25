@@ -6,12 +6,7 @@ import { Button } from 'common/Button/Button';
 import { validationAuthForm } from 'helpers/fieldsValidation';
 import { fetchLogin } from 'helpers/fetchApi';
 import { Context } from 'context/context';
-import {
-	INPUT_EMAIL_ID,
-	INPUT_PASSWORD_ID,
-	REGISTRATION_PATH,
-	COURSES_PATH,
-} from 'constants';
+import { INPUT_EMAIL_ID, REGISTRATION_PATH, COURSES_PATH } from 'constants';
 
 import style from './login.module.css';
 
@@ -21,23 +16,12 @@ export const Login = () => {
 	const [showPass, setShowPass] = useState(false);
 	const { setUser, setIsLoggedIn, setIsLoading } = useContext(Context);
 
-	const inputsStates = {
-		[INPUT_EMAIL_ID]: setEmail,
-		[INPUT_PASSWORD_ID]: setPassword,
-	};
-
 	const navigate = useNavigate();
-
-	const handleChange = (ukey, { target: { value } }) =>
-		inputsStates[ukey](value);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
-		const isValid = validationAuthForm({
-			[INPUT_EMAIL_ID]: email,
-			[INPUT_PASSWORD_ID]: password,
-		});
+		const isValid = validationAuthForm({ [INPUT_EMAIL_ID]: email });
 		if (isValid) {
 			const user = await fetchLogin({ email, password });
 			if (user) {
@@ -61,7 +45,7 @@ export const Login = () => {
 					labelText='Email'
 					placeholder='Enter email'
 					value={email}
-					onChange={(e) => handleChange(INPUT_EMAIL_ID, e)}
+					onChange={({ target: { value } }) => setEmail(value)}
 				/>
 			</div>
 			<div
@@ -75,10 +59,10 @@ export const Login = () => {
 					labelText='Password'
 					placeholder='Enter password'
 					value={password}
-					onChange={(e) => handleChange(INPUT_PASSWORD_ID, e)}
+					onChange={({ target: { value } }) => setPassword(value)}
 				/>
 				<button
-					onClick={() => setShowPass((prevState) => !prevState)}
+					onClick={() => setShowPass(!showPass)}
 					className={style.showPassBtn}
 					type='button'
 				></button>

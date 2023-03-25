@@ -24,15 +24,6 @@ export const Registration = () => {
 
 	const navigate = useNavigate();
 
-	const inputsStates = {
-		[INPUT_NAME_ID]: setName,
-		[INPUT_EMAIL_ID]: setEmail,
-		[INPUT_PASSWORD_ID]: setPassword,
-	};
-
-	const handleChange = (ukey, { target: { value } }) =>
-		inputsStates[ukey](value);
-
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
@@ -62,7 +53,7 @@ export const Registration = () => {
 					labelText='Name'
 					placeholder='Enter name'
 					value={name}
-					onChange={(e) => handleChange(INPUT_NAME_ID, e)}
+					onChange={({ target: { value } }) => setName(value)}
 				/>
 			</div>
 			<div className={style.registrationFormInput}>
@@ -74,7 +65,7 @@ export const Registration = () => {
 					labelText='Email'
 					placeholder='Enter email'
 					value={email}
-					onChange={(e) => handleChange(INPUT_EMAIL_ID, e)}
+					onChange={({ target: { value } }) => setEmail(value)}
 				/>
 			</div>
 			<div
@@ -91,11 +82,11 @@ export const Registration = () => {
 					labelText='Password'
 					placeholder='Enter password'
 					value={password}
-					onChange={(e) => handleChange(INPUT_PASSWORD_ID, e)}
+					onChange={({ target: { value } }) => setPassword(value)}
 				/>
 
 				<button
-					onClick={() => setShowPass((prevState) => !prevState)}
+					onClick={() => setShowPass(!showPass)}
 					className={style.showPassBtn}
 					type='button'
 				></button>

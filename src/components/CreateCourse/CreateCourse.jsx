@@ -77,6 +77,8 @@ export const CreateCourse = () => {
 		if (author.length < 3) {
 			toast.warn('Author name length should be at least 2 characters!');
 			return;
+		} else if (/^[\s]+$/.test(author)) {
+			return;
 		}
 		const newAuthor = { id: uIdv4(), name: author };
 		setAuthors([...authors, newAuthor]);
