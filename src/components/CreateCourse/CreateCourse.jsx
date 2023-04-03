@@ -1,5 +1,7 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { v4 as uIdv4 } from 'uuid';
 
 import { Input } from 'common/Input/Input';
 import { Button } from 'common/Button/Button';
@@ -13,18 +15,20 @@ import {
 	INPUT_DESCRIPTION_ID,
 	INPUT_DURATION_ID,
 	INPUT_AUTHOR_ID,
+	COURSES_PATH,
 } from 'constants';
 
 import style from './createCourse.module.css';
 
 export const CreateCourse = () => {
-	const { createAuthor, createCourse, authors } = useContext(Context);
+	const { authors, courses, setCourses, setAuthors } = useContext(Context);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [author, setAuthor] = useState('');
 	const [duration, setDuration] = useState('');
 	const [courseAuthor, setCourseAuthor] = useState([]);
 	const [availableAuthors, setAvailableAuthors] = useState(authors);
+	const navigate = useNavigate();
 
 	const inputsStates = {
 		[INPUT_TITLE_ID]: setTitle,
@@ -73,8 +77,11 @@ export const CreateCourse = () => {
 		if (author.length < 3) {
 			toast.warn('Author name length should be at least 2 characters!');
 			return;
+		} else if (/^[\s]+$/.test(author)) {
+			return;
 		}
-		const newAuthor = createAuthor(author);
+		const newAuthor = { id: uIdv4(), name: author };
+		setAuthors([...authors, newAuthor]);
 		setAvailableAuthors([...availableAuthors, newAuthor]);
 		setAuthor('');
 	};
@@ -87,18 +94,23 @@ export const CreateCourse = () => {
 			courseAuthor,
 		});
 		if (isValid) {
-			createCourse({
-				title,
-				description,
-				creationDate: dateGenerator(new Date(), '/'),
-				duration: +duration,
-				authors: courseAuthor.map(({ id }) => id),
-			});
+			setCourses([
+				...courses,
+				{
+					id: uIdv4(),
+					title,
+					description,
+					creationDate: dateGenerator(new Date(), '/'),
+					duration: +duration,
+					authors: courseAuthor.map(({ id }) => id),
+				},
+			]);
+			navigate(`/${COURSES_PATH}`);
 		}
 	};
 
 	return (
-		<section className={style.createCourse}>
+		<>
 			<div className={style.createCourseTitleContainer}>
 				<div className={style.createCourseInputTitle}>
 					<Input
@@ -185,6 +197,6 @@ export const CreateCourse = () => {
 					/>
 				</div>
 			</div>
-		</section>
+		</>
 	);
 };

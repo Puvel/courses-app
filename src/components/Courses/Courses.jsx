@@ -1,23 +1,21 @@
-import React, { useState } from 'react';
-import { v4 as uIdv4 } from 'uuid';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { SearchBar } from './components/SearchBar/SearchBar';
 import { CourseCard } from './components/CourseCard/CourseCard';
-import { CreateCourse } from 'components/CreateCourse/CreateCourse';
 import { Button } from 'common/Button/Button';
-import { Context } from 'context/context';
 import { dateСonversion } from 'helpers/dateGenerator';
 import { pipeDuration } from 'helpers/pipeDuration';
 import { authorGenerator } from 'helpers/authorGenerator';
-import { mockedCoursesList, mockedAuthorsList } from 'constants';
+import { CREATE_COURSE_PATH } from 'constants';
+import { Context } from 'context/context';
 
 import style from './courses.module.css';
 
 export const Courses = () => {
-	const [courses, setCourses] = useState(mockedCoursesList);
+	const { courses, authors } = useContext(Context);
 	const [foundCourses, setFoundCourses] = useState(courses);
-	const [authors, setAuthors] = useState(mockedAuthorsList);
-	const [creationMode, setMode] = useState(false);
+	const navigate = useNavigate();
 
 	const searchCourses = (query = '') => {
 		if (!query) {
@@ -31,44 +29,27 @@ export const Courses = () => {
 		}
 	};
 
-	const createAuthor = (author) => {
-		const newAuthor = { id: uIdv4(), name: author };
-		setAuthors([...authors, newAuthor]);
-		return newAuthor;
-	};
-
-	const createCourse = (data) => {
-		const newCourse = { ...data, id: uIdv4() };
-		setCourses([...courses, newCourse]);
-		setFoundCourses([...courses, newCourse]);
-		setMode(false);
-	};
-
 	return (
-		<Context.Provider
-			value={{ searchCourses, createAuthor, createCourse, authors }}
-		>
-			{!creationMode && (
-				<section className={style.courses}>
-					<div className={style.coursesSearch}>
-						<SearchBar />
-						<Button onClick={() => setMode(true)}>Add new course</Button>
-					</div>
-					<ul>
-						{foundCourses.map((course) => (
-							<CourseCard
-								key={course.id}
-								title={course.title}
-								description={course.description}
-								date={dateСonversion(course.creationDate)}
-								duration={pipeDuration(course.duration)}
-								author={authorGenerator(authors, course.authors)}
-							/>
-						))}
-					</ul>
-				</section>
-			)}
-			{creationMode && <CreateCourse />}
+		<Context.Provider value={{ searchCourses }}>
+			<div className={style.coursesSearch}>
+				<SearchBar />
+				<Button onClick={() => navigate(`/${CREATE_COURSE_PATH}`)}>
+					Add new course
+				</Button>
+			</div>
+			<ul>
+				{foundCourses.map((course) => (
+					<CourseCard
+						key={course.id}
+						id={course.id}
+						title={course.title}
+						description={course.description}
+						date={dateСonversion(course.creationDate)}
+						duration={pipeDuration(course.duration)}
+						author={authorGenerator(authors, course.authors).join(', ')}
+					/>
+				))}
+			</ul>
 		</Context.Provider>
 	);
 };

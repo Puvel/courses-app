@@ -1,8 +1,3 @@
-.createCourse {
-	border: 1px solid #8cafbf;
-	padding: 20px;
-}
-
 .createCourseTitleContainer {
 	display: flex;
 	justify-content: space-between;

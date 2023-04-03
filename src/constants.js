@@ -4,6 +4,16 @@ export const INPUT_TITLE_ID = uIdv4();
 export const INPUT_DESCRIPTION_ID = uIdv4();
 export const INPUT_DURATION_ID = uIdv4();
 export const INPUT_AUTHOR_ID = uIdv4();
+export const INPUT_NAME_ID = uIdv4();
+export const INPUT_EMAIL_ID = uIdv4();
+export const INPUT_PASSWORD_ID = uIdv4();
+
+export const LOGIN_PATH = 'login';
+export const REGISTRATION_PATH = 'registration';
+export const COURSES_PATH = 'courses';
+export const CREATE_COURSE_PATH = 'courses/add';
+export const COURSE_PATH = ':courseId';
+export const ERROR_PATH = 'not_found';
 
 export const mockedCoursesList = [
 	{
@@ -53,3 +63,11 @@ export const mockedAuthorsList = [
 		name: 'Valentina Larina',
 	},
 ];
+
+// eslint-disable-next-line no-useless-escape
+export const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+export const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+
+export const emailValidationText = 'is not a valid email address';
+export const passwordValidationText =
+	'Password should least 6 characters long, contains least one lowercase letter, one uppercase letter and one number.';
