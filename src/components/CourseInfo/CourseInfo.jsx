@@ -1,18 +1,20 @@
-import { useContext, useMemo, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { dateСonversion } from 'helpers/dateGenerator';
 import { pipeDuration } from 'helpers/pipeDuration';
 import { authorGenerator } from 'helpers/authorGenerator';
 import { COURSES_PATH, ERROR_PATH } from 'constants';
-import { Context } from 'context/context';
+import { selectCourses, selectAuthors } from 'store/selectors';
 
 import style from './courseInfo.module.css';
 
 export const CourseInfo = () => {
 	let { courseId } = useParams();
 	const navigate = useNavigate();
-	const { authors, courses } = useContext(Context);
+	const courses = useSelector(selectCourses);
+	const authors = useSelector(selectAuthors);
 	const course = useMemo(
 		() => courses.find((course) => course.id === courseId),
 		[courses, courseId]

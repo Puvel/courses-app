@@ -11,6 +11,7 @@ export const CourseCard = ({
 	author,
 	duration,
 	date,
+	deleteCourse,
 }) => {
 	let navigate = useNavigate();
 	return (
@@ -23,7 +24,24 @@ export const CourseCard = ({
 				<p className={style.course_author}>Authors: {author}</p>
 				<p className={style.course_duration}>Duration: {duration} hours</p>
 				<p className={style.course_date}>Created: {date}</p>
-				<Button onClick={() => navigate(`/courses/${id}`)}>Show course</Button>
+				<div className={style.course_btn_wrap}>
+					<Button onClick={() => navigate(`/courses/${id}`)}>
+						Show course
+					</Button>
+
+					<button className={style.course_edit} type='button'>
+						&#9998;
+					</button>
+					<button
+						onClick={() => {
+							deleteCourse(id);
+						}}
+						className={style.course_remove}
+						type='button'
+					>
+						&#128465;
+					</button>
+				</div>
 			</div>
 		</li>
 	);

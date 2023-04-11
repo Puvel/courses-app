@@ -1,5 +1,6 @@
-import { useState, useContext } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { SearchBar } from './components/SearchBar/SearchBar';
 import { CourseCard } from './components/CourseCard/CourseCard';
@@ -8,13 +9,16 @@ import { dateСonversion } from 'helpers/dateGenerator';
 import { pipeDuration } from 'helpers/pipeDuration';
 import { authorGenerator } from 'helpers/authorGenerator';
 import { CREATE_COURSE_PATH } from 'constants';
-import { Context } from 'context/context';
+import { removeCourse } from 'store/courses/actionCreator';
+import { selectCourses, selectAuthors } from 'store/selectors';
 
 import style from './courses.module.css';
 
 export const Courses = () => {
-	const { courses, authors } = useContext(Context);
+	const courses = useSelector(selectCourses);
+	const authors = useSelector(selectAuthors);
 	const [foundCourses, setFoundCourses] = useState(courses);
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const searchCourses = (query = '') => {
@@ -22,17 +26,25 @@ export const Courses = () => {
 			setFoundCourses(courses);
 		} else {
 			const regExp = new RegExp(query, 'i');
-			const foundCourses = courses.filter(
+			const filteredCourses = courses.filter(
 				(course) => regExp.test(course.title) || regExp.test(course.id)
 			);
-			setFoundCourses(foundCourses);
+			setFoundCourses(filteredCourses);
 		}
 	};
 
+	const deleteCourse = (id) => {
+		dispatch(removeCourse(id));
+	};
+
+	useMemo(() => {
+		setFoundCourses(courses);
+	}, [courses]);
+
 	return (
-		<Context.Provider value={{ searchCourses }}>
+		<>
 			<div className={style.coursesSearch}>
-				<SearchBar />
+				<SearchBar searchCourses={searchCourses} />
 				<Button onClick={() => navigate(`/${CREATE_COURSE_PATH}`)}>
 					Add new course
 				</Button>
@@ -47,9 +59,10 @@ export const Courses = () => {
 						date={dateСonversion(course.creationDate)}
 						duration={pipeDuration(course.duration)}
 						author={authorGenerator(authors, course.authors).join(', ')}
+						deleteCourse={deleteCourse}
 					/>
 				))}
 			</ul>
-		</Context.Provider>
+		</>
 	);
 };

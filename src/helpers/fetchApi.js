@@ -31,10 +31,8 @@ export const fetchLogin = async (body) => {
 
 		if (status === 201) {
 			const token = data.result;
-			localStorage.setItem('token', token);
-			localStorage.setItem('isLoggedIn', true);
 			setToken(token);
-			return data.user;
+			return { token: token, email: data.user.email, name: data.user.name };
 		}
 	} catch ({ response: { status, statusText } }) {
 		if (status === 400) {
@@ -48,8 +46,6 @@ export const fetchLogout = async () => {
 	try {
 		const { status } = await axios.delete('/logout');
 		if (status === 200) {
-			localStorage.removeItem('token');
-			localStorage.removeItem('isLoggedIn');
 			clearToken();
 			return true;
 		}
@@ -58,7 +54,7 @@ export const fetchLogout = async () => {
 	}
 };
 
-export const fetchCheckUser = async (token, setUser, setIsLogged) => {
+export const fetchCheckUser = async (token) => {
 	try {
 		const { status, data } = await axios.get('/users/me', {
 			headers: { Authorization: token },
@@ -66,15 +62,31 @@ export const fetchCheckUser = async (token, setUser, setIsLogged) => {
 
 		if (status === 200) {
 			setToken(token);
-			setUser({
-				name: data.result.name,
-				email: data.result.email,
-			});
-			setIsLogged(true);
+			return { name: data.result.name, email: data.result.email };
 		}
 	} catch ({ response: { status, statusText } }) {
-		localStorage.removeItem('token');
-		setIsLogged(false);
+		toast.error(statusText);
+	}
+};
+
+export const fetchCourses = async () => {
+	try {
+		const { data, status } = await axios.get('/courses/all');
+		if (status === 200) {
+			return data.result;
+		}
+	} catch ({ response: { statusText } }) {
+		toast.error(statusText);
+	}
+};
+
+export const fetchAuthors = async () => {
+	try {
+		const { data, status } = await axios.get('/authors/all');
+		if (status === 200) {
+			return data.result;
+		}
+	} catch ({ response: { statusText } }) {
 		toast.error(statusText);
 	}
 };

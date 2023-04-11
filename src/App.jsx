@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Courses } from './components/Courses/Courses';
 import { Registration } from './components/Registration/Registration';
@@ -8,8 +9,12 @@ import { Layout } from 'components/Layout/Layout';
 import { CourseInfo } from './components/CourseInfo/CourseInfo';
 import { CreateCourse } from './components/CreateCourse/CreateCourse';
 import { NotFoundPage } from './components/NotFoundPage/NotFoundPage';
-import { Context } from 'context/context';
-import { fetchLogout, fetchCheckUser } from 'helpers/fetchApi';
+import { fetchCourses, fetchAuthors, fetchCheckUser } from 'helpers/fetchApi';
+import { selectUser } from 'store/selectors';
+import { setLoading } from 'store/general/actionCreator';
+import { onLogin, onLogout } from 'store/user/actionCreator';
+import { getCourses } from 'store/courses/actionCreator';
+import { getAuthors } from 'store/authors/actionCreator';
 import {
 	LOGIN_PATH,
 	REGISTRATION_PATH,
@@ -17,55 +22,43 @@ import {
 	COURSE_PATH,
 	ERROR_PATH,
 	CREATE_COURSE_PATH,
-	mockedCoursesList,
-	mockedAuthorsList,
 } from 'constants';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 export const App = () => {
-	const [user, setUser] = useState(null);
-	const [isLoading, setIsLoading] = useState(false);
-	const [isLoggedIn, setIsLoggedIn] = useState(
-		!!localStorage.getItem('isLoggedIn')
-	);
-	const [courses, setCourses] = useState(mockedCoursesList);
-	const [authors, setAuthors] = useState(mockedAuthorsList);
+	const { isAuth } = useSelector(selectUser);
+	const dispatch = useDispatch();
 
-	const logOutHandle = async () => {
-		setIsLoading(true);
-		const res = await fetchLogout();
-		if (res) {
-			setIsLoggedIn(false);
-			setUser(null);
-		}
-		setIsLoading(false);
-	};
+	const getCoursesDate = useCallback(async () => {
+		const courseRes = await fetchCourses();
+		const authorsRes = await fetchAuthors();
+		dispatch(getCourses(courseRes));
+		dispatch(getAuthors(authorsRes));
+	}, [dispatch]);
 
-	useEffect(() => {
+	const chekUser = useCallback(async () => {
 		const token = localStorage.getItem('token');
 		if (token) {
-			fetchCheckUser(token, setUser, setIsLoggedIn);
+			const user = await fetchCheckUser(token);
+			if (user) {
+				dispatch(onLogin({ ...user, token: token }));
+			} else {
+				dispatch(onLogout());
+			}
 		}
-	}, []);
+	}, [dispatch]);
+
+	useEffect(() => {
+		dispatch(setLoading(true));
+		chekUser();
+		getCoursesDate();
+		dispatch(setLoading(false));
+	}, [dispatch, chekUser, getCoursesDate]);
 
 	return (
-		<Context.Provider
-			value={{
-				user,
-				setUser,
-				logOutHandle,
-				isLoggedIn,
-				setIsLoggedIn,
-				isLoading,
-				setIsLoading,
-				courses,
-				setCourses,
-				authors,
-				setAuthors,
-			}}
-		>
+		<>
 			<Routes>
 				<Route path='/' element={<Layout />}>
 					<Route
@@ -75,7 +68,7 @@ export const App = () => {
 					<Route
 						path={REGISTRATION_PATH}
 						element={
-							!isLoggedIn ? (
+							!isAuth ? (
 								<Registration />
 							) : (
 								<Navigate to={`/${COURSES_PATH}`} replace={true} />
@@ -85,7 +78,7 @@ export const App = () => {
 					<Route
 						path={LOGIN_PATH}
 						element={
-							!isLoggedIn ? (
+							!isAuth ? (
 								<Login />
 							) : (
 								<Navigate to={`/${COURSES_PATH}`} replace={true} />
@@ -95,7 +88,7 @@ export const App = () => {
 					<Route
 						path={COURSES_PATH}
 						element={
-							isLoggedIn ? (
+							isAuth ? (
 								<Courses />
 							) : (
 								<Navigate to={`/${LOGIN_PATH}`} replace={true} />
@@ -105,7 +98,7 @@ export const App = () => {
 					<Route
 						path={CREATE_COURSE_PATH}
 						element={
-							isLoggedIn ? (
+							isAuth ? (
 								<CreateCourse />
 							) : (
 								<Navigate to={`/${LOGIN_PATH}`} replace={true} />
@@ -115,7 +108,7 @@ export const App = () => {
 					<Route
 						path={`${COURSES_PATH}/${COURSE_PATH}`}
 						element={
-							isLoggedIn ? (
+							isAuth ? (
 								<CourseInfo />
 							) : (
 								<Navigate to={`/${LOGIN_PATH}`} replace={true} />
@@ -129,6 +122,6 @@ export const App = () => {
 					/>
 				</Route>
 			</Routes>
-		</Context.Provider>
+		</>
 	);
 };
