@@ -4,6 +4,7 @@ const initialState = {
 	name: '',
 	email: '',
 	token: '',
+	role: '',
 };
 
 export const userReducer = (state = initialState, { type, payload }) => {

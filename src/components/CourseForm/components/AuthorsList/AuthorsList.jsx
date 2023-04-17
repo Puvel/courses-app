@@ -13,7 +13,10 @@ export const AuthorsList = ({
 		{authors.length ? (
 			<ul className={style.authorsList}>
 				{authors.map((author) => (
-					<li key={author.id} className={style.authorsItem}>
+					<li
+						key={` ${Math.random() * 100}_${author.id} `}
+						className={style.authorsItem}
+					>
 						<p>{author.name}</p>
 						<Button onClick={authorBtnClick} data-id={author.id}>
 							{authorBtnText}

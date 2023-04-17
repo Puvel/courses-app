@@ -8,6 +8,7 @@ export const getAuthors = (authors) => {
 };
 
 export const addAuthor = (author) => {
+	console.log(author);
 	return {
 		type: ADD_AUTHORS,
 		payload: author,

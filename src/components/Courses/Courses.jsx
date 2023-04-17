@@ -10,13 +10,14 @@ import { pipeDuration } from 'helpers/pipeDuration';
 import { authorGenerator } from 'helpers/authorGenerator';
 import { CREATE_COURSE_PATH } from 'constants';
 import { removeCourse } from 'store/courses/actionCreator';
-import { selectCourses, selectAuthors } from 'store/selectors';
+import { selectCourses, selectAuthors, selectUser } from 'store/selectors';
 
 import style from './courses.module.css';
 
 export const Courses = () => {
 	const courses = useSelector(selectCourses);
 	const authors = useSelector(selectAuthors);
+	const { role } = useSelector(selectUser);
 	const [foundCourses, setFoundCourses] = useState(courses);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -45,9 +46,11 @@ export const Courses = () => {
 		<>
 			<div className={style.coursesSearch}>
 				<SearchBar searchCourses={searchCourses} />
-				<Button onClick={() => navigate(`/${CREATE_COURSE_PATH}`)}>
-					Add new course
-				</Button>
+				{role === 'admin' && (
+					<Button onClick={() => navigate(`/${CREATE_COURSE_PATH}`)}>
+						Add new course
+					</Button>
+				)}
 			</div>
 			<ul>
 				{foundCourses.map((course) => (

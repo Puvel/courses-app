@@ -5,8 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Input } from 'common/Input/Input';
 import { Button } from 'common/Button/Button';
 import { validationAuthForm } from 'helpers/fieldsValidation';
-import { fetchRegister } from 'helpers/fetchApi';
-import { setLoading } from 'store/general/actionCreator';
+import { registrationThunk } from 'store/user/thunk';
 import {
 	INPUT_NAME_ID,
 	INPUT_EMAIL_ID,
@@ -27,19 +26,16 @@ export const Registration = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		dispatch(setLoading(true));
+
 		const isValid = validationAuthForm({
 			[INPUT_NAME_ID]: name,
 			[INPUT_EMAIL_ID]: email,
 			[INPUT_PASSWORD_ID]: password,
 		});
 		if (isValid) {
-			const isSuccess = await fetchRegister({ name, email, password });
-			if (isSuccess) {
-				navigate(`/${LOGIN_PATH}`);
-			}
+			dispatch(registrationThunk({ name, email, password }));
+			navigate(`/${LOGIN_PATH}`);
 		}
-		dispatch(setLoading(false));
 	};
 
 	return (

@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { v4 as uIdv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
-
 import { Input } from 'common/Input/Input';
 import { Button } from 'common/Button/Button';
 import { AuthorsList } from './components/AuthorsList/AuthorsList';
 import { pipeDuration } from 'helpers/pipeDuration';
 import { dateGenerator } from 'helpers/dateGenerator';
 import { fieldsValidation } from 'helpers/fieldsValidation';
-import { selectCourses, selectAuthors } from 'store/selectors';
-import { addAuthor } from 'store/authors/actionCreator';
+import { selectAuthors } from 'store/selectors';
+import { addAuthorThunk } from 'store/authors/thunk';
 import { addCourse } from 'store/courses/actionCreator';
 import {
 	INPUT_TITLE_ID,
@@ -21,10 +20,9 @@ import {
 	COURSES_PATH,
 } from 'constants';
 
-import style from './createCourse.module.css';
+import style from './courseForm.module.css';
 
-export const CreateCourse = () => {
-	const courses = useSelector(selectCourses);
+export const CourseForm = () => {
 	const authors = useSelector(selectAuthors);
 	const dispatch = useDispatch();
 	const [title, setTitle] = useState('');
@@ -34,6 +32,12 @@ export const CreateCourse = () => {
 	const [courseAuthor, setCourseAuthor] = useState([]);
 	const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		setAvailableAuthors(
+			authors.filter((author) => !courseAuthor.includes(author.id))
+		);
+	}, [authors, courseAuthor]);
 
 	const inputsStates = {
 		[INPUT_TITLE_ID]: setTitle,
@@ -48,9 +52,9 @@ export const CreateCourse = () => {
 		);
 		if (author) {
 			setCourseAuthor([...courseAuthor, author]);
-			setAvailableAuthors((prevList) =>
-				prevList.filter((item) => item.id !== author.id)
-			);
+			// setAvailableAuthors((prevList) =>
+			// 	prevList.filter((item) => item.id !== author.id)
+			// );
 		}
 	};
 
@@ -59,7 +63,7 @@ export const CreateCourse = () => {
 			(author) => author.id === e.target.dataset.id
 		);
 		if (author) {
-			setAvailableAuthors([...availableAuthors, author]);
+			// setAvailableAuthors([...availableAuthors, author]);
 			setCourseAuthor((prevList) =>
 				prevList.filter((item) => item.id !== author.id)
 			);
@@ -78,16 +82,16 @@ export const CreateCourse = () => {
 		inputsStates[ukey](value);
 	};
 
-	const handleCreateAuthor = async () => {
+	const handleCreateAuthor = () => {
 		if (author.length < 3) {
 			toast.warn('Author name length should be at least 2 characters!');
 			return;
 		} else if (/^[\s]+$/.test(author)) {
 			return;
 		}
-		const newAuthor = { id: uIdv4(), name: author };
-		dispatch(addAuthor(newAuthor));
-		setAvailableAuthors([...availableAuthors, newAuthor]);
+		dispatch(addAuthorThunk({ name: author }));
+
+		// setAvailableAuthors([...availableAuthors, newAuthor]);
 		setAuthor('');
 	};
 
@@ -116,8 +120,8 @@ export const CreateCourse = () => {
 
 	return (
 		<>
-			<div className={style.createCourseTitleContainer}>
-				<div className={style.createCourseInputTitle}>
+			<div className={style.courseFormTitleContainer}>
+				<div className={style.courseFormInputTitle}>
 					<Input
 						id='title'
 						name='title'
@@ -132,7 +136,7 @@ export const CreateCourse = () => {
 
 				<Button onClick={createCourseHandle}>Create course</Button>
 			</div>
-			<div className={style.createCourseDescription}>
+			<div className={style.courseFormDescription}>
 				<Input
 					isArea={true}
 					id='description'
@@ -144,8 +148,8 @@ export const CreateCourse = () => {
 					onChange={(e) => handleChange(INPUT_DESCRIPTION_ID, e)}
 				/>
 			</div>
-			<div className={style.createCourseAuthorsWrap}>
-				<div className={style.createCourseAuthors}>
+			<div className={style.courseFormAuthorsWrap}>
+				<div className={style.courseFormAuthors}>
 					<div className={style.createAuthor}>
 						<h5 className={style.createAuthorTitle}>Add author</h5>
 						<div className={style.createAuthorInput}>
@@ -163,9 +167,9 @@ export const CreateCourse = () => {
 
 						<Button onClick={handleCreateAuthor}>Create author</Button>
 					</div>
-					<div className={style.createCourseDuration}>
-						<h5 className={style.createCourseDurationTitle}>Duration</h5>
-						<div className={style.createCourseDurationInput}>
+					<div className={style.courseFormDuration}>
+						<h5 className={style.courseFormDurationTitle}>Duration</h5>
+						<div className={style.courseFormDurationInput}>
 							<Input
 								id='duration'
 								name='duration'
@@ -178,16 +182,16 @@ export const CreateCourse = () => {
 							/>
 						</div>
 
-						<p className={style.createCourseDurationText}>
+						<p className={style.courseFormDurationText}>
 							Duration:
-							<span className={style.createCourseDurationValue}>
+							<span className={style.courseFormDurationValue}>
 								{duration ? pipeDuration(duration) : '00:00'}
 							</span>
 							hours
 						</p>
 					</div>
 				</div>
-				<div className={style.createCourseAuthors}>
+				<div className={style.courseFormAuthors}>
 					<AuthorsList
 						authorBtnClick={setAuthorHandle}
 						authorBtnText='Add author'

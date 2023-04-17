@@ -1,28 +1,28 @@
-.createCourseTitleContainer {
+.courseFormTitleContainer {
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-end;
 	margin-bottom: 15px;
 }
 
-.createCourseInputTitle {
+.courseFormInputTitle {
 	display: flex;
 	flex-direction: column;
 	width: 30%;
 }
 
-.createCourseDescription {
+.courseFormDescription {
 	display: flex;
 	flex-direction: column;
 	margin-bottom: 15px;
 }
 
-.createCourseAuthorsWrap {
+.courseFormAuthorsWrap {
 	display: flex;
 	justify-content: space-between;
 }
 
-.createCourseAuthors {
+.courseFormAuthors {
 	width: 48%;
 }
 
@@ -44,30 +44,30 @@
 	margin-bottom: 15px;
 }
 
-.createCourseDuration {
+.courseFormDuration {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
-.createCourseDurationTitle {
+.courseFormDurationTitle {
 	font-size: 16px;
 	margin-bottom: 15px;
 }
 
-.createCourseDurationInput {
+.courseFormDurationInput {
 	display: flex;
 	flex-direction: column;
 	align-self: stretch;
 	margin-bottom: 15px;
 }
 
-.createCourseDurationText {
+.courseFormDurationText {
 	font-size: 24px;
 	align-self: flex-start;
 }
 
-.createCourseDurationValue {
+.courseFormDurationValue {
 	font-size: 28px;
 	font-weight: 600;
 	margin: 0 5px;

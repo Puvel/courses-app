@@ -7,14 +7,15 @@ import { Registration } from './components/Registration/Registration';
 import { Login } from 'components/Login/Login';
 import { Layout } from 'components/Layout/Layout';
 import { CourseInfo } from './components/CourseInfo/CourseInfo';
-import { CreateCourse } from './components/CreateCourse/CreateCourse';
+import { CourseForm } from './components/CourseForm/CourseForm';
+import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
 import { NotFoundPage } from './components/NotFoundPage/NotFoundPage';
-import { fetchCourses, fetchAuthors, fetchCheckUser } from 'helpers/fetchApi';
+import { fetchCourses, fetchCheckUser } from 'helpers/fetchApi';
 import { selectUser } from 'store/selectors';
 import { setLoading } from 'store/general/actionCreator';
 import { onLogin, onLogout } from 'store/user/actionCreator';
 import { getCourses } from 'store/courses/actionCreator';
-import { getAuthors } from 'store/authors/actionCreator';
+import { getAuthorsThunk } from 'store/authors/thunk';
 import {
 	LOGIN_PATH,
 	REGISTRATION_PATH,
@@ -33,9 +34,8 @@ export const App = () => {
 
 	const getCoursesDate = useCallback(async () => {
 		const courseRes = await fetchCourses();
-		const authorsRes = await fetchAuthors();
 		dispatch(getCourses(courseRes));
-		dispatch(getAuthors(authorsRes));
+		dispatch(getAuthorsThunk());
 	}, [dispatch]);
 
 	const chekUser = useCallback(async () => {
@@ -99,7 +99,9 @@ export const App = () => {
 						path={CREATE_COURSE_PATH}
 						element={
 							isAuth ? (
-								<CreateCourse />
+								<PrivateRoute>
+									<CourseForm />
+								</PrivateRoute>
 							) : (
 								<Navigate to={`/${LOGIN_PATH}`} replace={true} />
 							)
