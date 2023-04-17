@@ -1,11 +1,12 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { Input } from 'common/Input/Input';
 import { Button } from 'common/Button/Button';
 import { validationAuthForm } from 'helpers/fieldsValidation';
 import { fetchRegister } from 'helpers/fetchApi';
-import { Context } from 'context/context';
+import { setLoading } from 'store/general/actionCreator';
 import {
 	INPUT_NAME_ID,
 	INPUT_EMAIL_ID,
@@ -20,13 +21,13 @@ export const Registration = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPass, setShowPass] = useState(false);
-	const { setIsLoading } = useContext(Context);
+	const dispatch = useDispatch();
 
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		setIsLoading(true);
+		dispatch(setLoading(true));
 		const isValid = validationAuthForm({
 			[INPUT_NAME_ID]: name,
 			[INPUT_EMAIL_ID]: email,
@@ -38,7 +39,7 @@ export const Registration = () => {
 				navigate(`/${LOGIN_PATH}`);
 			}
 		}
-		setIsLoading(false);
+		dispatch(setLoading(false));
 	};
 
 	return (

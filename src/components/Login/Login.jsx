@@ -1,12 +1,14 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { Input } from 'common/Input/Input';
 import { Button } from 'common/Button/Button';
 import { validationAuthForm } from 'helpers/fieldsValidation';
 import { fetchLogin } from 'helpers/fetchApi';
-import { Context } from 'context/context';
 import { INPUT_EMAIL_ID, REGISTRATION_PATH, COURSES_PATH } from 'constants';
+import { setLoading } from 'store/general/actionCreator';
+import { onLogin } from 'store/user/actionCreator';
 
 import style from './login.module.css';
 
@@ -14,23 +16,20 @@ export const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPass, setShowPass] = useState(false);
-	const { setUser, setIsLoggedIn, setIsLoading } = useContext(Context);
+	const dispatch = useDispatch();
 
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		setIsLoading(true);
+		dispatch(setLoading(true));
 		const isValid = validationAuthForm({ [INPUT_EMAIL_ID]: email });
 		if (isValid) {
-			const user = await fetchLogin({ email, password });
-			if (user) {
-				navigate(`/${COURSES_PATH}`);
-				setUser(user);
-				setIsLoggedIn(true);
-			}
+			const data = await fetchLogin({ email, password });
+			dispatch(onLogin(data));
+			navigate(`/${COURSES_PATH}`);
 		}
-		setIsLoading(false);
+		dispatch(setLoading(false));
 	};
 
 	return (

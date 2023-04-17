@@ -1,7 +1,8 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { v4 as uIdv4 } from 'uuid';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Input } from 'common/Input/Input';
 import { Button } from 'common/Button/Button';
@@ -9,7 +10,9 @@ import { AuthorsList } from './components/AuthorsList/AuthorsList';
 import { pipeDuration } from 'helpers/pipeDuration';
 import { dateGenerator } from 'helpers/dateGenerator';
 import { fieldsValidation } from 'helpers/fieldsValidation';
-import { Context } from 'context/context';
+import { selectCourses, selectAuthors } from 'store/selectors';
+import { addAuthor } from 'store/authors/actionCreator';
+import { addCourse } from 'store/courses/actionCreator';
 import {
 	INPUT_TITLE_ID,
 	INPUT_DESCRIPTION_ID,
@@ -21,7 +24,9 @@ import {
 import style from './createCourse.module.css';
 
 export const CreateCourse = () => {
-	const { authors, courses, setCourses, setAuthors } = useContext(Context);
+	const courses = useSelector(selectCourses);
+	const authors = useSelector(selectAuthors);
+	const dispatch = useDispatch();
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [author, setAuthor] = useState('');
@@ -37,7 +42,7 @@ export const CreateCourse = () => {
 		[INPUT_DURATION_ID]: setDuration,
 	};
 
-	const addAuthor = (e) => {
+	const setAuthorHandle = (e) => {
 		const author = availableAuthors.find(
 			(author) => author.id === e.target.dataset.id
 		);
@@ -73,7 +78,7 @@ export const CreateCourse = () => {
 		inputsStates[ukey](value);
 	};
 
-	const handleCreateAuthor = () => {
+	const handleCreateAuthor = async () => {
 		if (author.length < 3) {
 			toast.warn('Author name length should be at least 2 characters!');
 			return;
@@ -81,7 +86,7 @@ export const CreateCourse = () => {
 			return;
 		}
 		const newAuthor = { id: uIdv4(), name: author };
-		setAuthors([...authors, newAuthor]);
+		dispatch(addAuthor(newAuthor));
 		setAvailableAuthors([...availableAuthors, newAuthor]);
 		setAuthor('');
 	};
@@ -94,17 +99,17 @@ export const CreateCourse = () => {
 			courseAuthor,
 		});
 		if (isValid) {
-			setCourses([
-				...courses,
-				{
+			dispatch(
+				addCourse({
 					id: uIdv4(),
 					title,
 					description,
 					creationDate: dateGenerator(new Date(), '/'),
 					duration: +duration,
 					authors: courseAuthor.map(({ id }) => id),
-				},
-			]);
+				})
+			);
+
 			navigate(`/${COURSES_PATH}`);
 		}
 	};
@@ -184,7 +189,7 @@ export const CreateCourse = () => {
 				</div>
 				<div className={style.createCourseAuthors}>
 					<AuthorsList
-						authorBtnClick={addAuthor}
+						authorBtnClick={setAuthorHandle}
 						authorBtnText='Add author'
 						title='Authors'
 						authors={availableAuthors}

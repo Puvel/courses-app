@@ -30,3 +30,18 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+.course_btn_wrap {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.course_edit,
+.course_remove {
+	font-size: 20px;
+	background-color: transparent;
+	padding: 0 5px;
+	border-color: rgb(209, 100, 209);
+	cursor: pointer;
+	margin-left: 10px;
+}
