@@ -1,30 +1,39 @@
-import { useMemo, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { dateСonversion } from 'helpers/dateGenerator';
-import { pipeDuration } from 'helpers/pipeDuration';
-import { authorGenerator } from 'helpers/authorGenerator';
+import {
+	dateСonversion,
+	authorGenerator,
+	pipeDuration,
+	fetchGetCourse,
+} from 'helpers';
 import { COURSES_PATH, ERROR_PATH } from 'constants';
-import { selectCourses, selectAuthors } from 'store/selectors';
+import { selectAuthors } from 'store';
 
 import style from './courseInfo.module.css';
 
 export const CourseInfo = () => {
 	let { courseId } = useParams();
 	const navigate = useNavigate();
-	const courses = useSelector(selectCourses);
 	const authors = useSelector(selectAuthors);
-	const course = useMemo(
-		() => courses.find((course) => course.id === courseId),
-		[courses, courseId]
-	);
 
-	useEffect(() => {
-		if (!course) {
+	const [course, setCourse] = useState(null);
+
+	const getCourse = useCallback(async () => {
+		const data = await fetchGetCourse(courseId);
+		if (data) {
+			setCourse(data);
+		} else {
 			navigate(`/${ERROR_PATH}`, { replace: true });
 		}
-	}, [course, navigate]);
+	}, [courseId, navigate]);
+
+	useEffect(() => {
+		if (courseId) {
+			getCourse();
+		}
+	}, [courseId, getCourse]);
 
 	return (
 		course && (

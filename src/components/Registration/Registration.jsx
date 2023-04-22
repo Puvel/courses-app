@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { Input } from 'common/Input/Input';
-import { Button } from 'common/Button/Button';
-import { validationAuthForm } from 'helpers/fieldsValidation';
-import { registrationThunk } from 'store/user/thunk';
+import { Input, Button } from 'common';
+import { validationAuthForm } from 'helpers';
+import { registrationThunk, setLoading } from 'store';
 import {
 	INPUT_NAME_ID,
 	INPUT_EMAIL_ID,
@@ -33,7 +32,9 @@ export const Registration = () => {
 			[INPUT_PASSWORD_ID]: password,
 		});
 		if (isValid) {
+			dispatch(setLoading(true));
 			dispatch(registrationThunk({ name, email, password }));
+			dispatch(setLoading(false));
 			navigate(`/${LOGIN_PATH}`);
 		}
 	};

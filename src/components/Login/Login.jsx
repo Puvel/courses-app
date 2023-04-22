@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { Input } from 'common/Input/Input';
-import { Button } from 'common/Button/Button';
-import { validationAuthForm } from 'helpers/fieldsValidation';
+import { Input, Button } from 'common';
+import { validationAuthForm } from 'helpers';
 import { INPUT_EMAIL_ID, REGISTRATION_PATH, COURSES_PATH } from 'constants';
-import { logInThunk } from 'store/user/thunk';
+import { logInThunk, setLoading } from 'store';
 import style from './login.module.css';
 
 export const Login = () => {
@@ -22,7 +21,9 @@ export const Login = () => {
 
 		const isValid = validationAuthForm({ [INPUT_EMAIL_ID]: email });
 		if (isValid) {
+			dispatch(setLoading(true));
 			dispatch(logInThunk({ email, password }));
+			dispatch(setLoading(false));
 			navigate(`/${COURSES_PATH}`);
 		}
 	};

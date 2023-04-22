@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { Button } from 'common/Button/Button';
-import { selectUser } from 'store/selectors';
+import { Button } from 'common';
+import { selectUser } from 'store';
 
 import style from './courseCard.module.css';
 
@@ -34,7 +34,11 @@ export const CourseCard = ({
 
 					{role === 'admin' && (
 						<>
-							<button className={style.course_edit} type='button'>
+							<button
+								onClick={() => navigate(`/courses/update/${id}`)}
+								className={style.course_edit}
+								type='button'
+							>
 								&#9998;
 							</button>
 							<button

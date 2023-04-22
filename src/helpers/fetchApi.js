@@ -42,6 +42,7 @@ export const fetchLogin = async (body) => {
 		}
 	}
 };
+
 export const fetchLogout = async () => {
 	try {
 		const { status } = await axios.delete('/logout');
@@ -73,6 +74,7 @@ export const fetchCheckUser = async (token) => {
 	}
 };
 
+// ========= COURSES ===========
 export const fetchCourses = async () => {
 	try {
 		const { data, status } = await axios.get('/courses/all');
@@ -84,22 +86,9 @@ export const fetchCourses = async () => {
 	}
 };
 
-export const fetchAddCourses = async (body) => {
+export const fetchGetCourse = async (id) => {
 	try {
-		const res = await axios.post('/courses/add');
-		console.log(res);
-		// if (status === 200) {
-		// 	return data.result;
-		// }
-	} catch ({ response: { statusText } }) {
-		toast.error(statusText);
-	}
-};
-
-export const deleteCourses = async (id) => {
-	try {
-		const { data, status } = await axios.delete(`/courses/${id}`);
-
+		const { data, status } = await axios.get(`/courses/${id}`);
 		if (status === 200) {
 			return data.result;
 		}
@@ -108,6 +97,40 @@ export const deleteCourses = async (id) => {
 	}
 };
 
+export const fetchAddCourse = async (body) => {
+	try {
+		const { data, status } = await axios.post('/courses/add', body);
+		if (status === 201) {
+			return data.result;
+		}
+	} catch ({ response: { statusText } }) {
+		toast.error(statusText);
+	}
+};
+
+export const fetchDeleteCourse = async (id) => {
+	try {
+		const { status } = await axios.delete(`/courses/${id}`);
+		if (status === 200) {
+			return true;
+		}
+	} catch ({ response: { statusText } }) {
+		toast.error(statusText);
+	}
+};
+
+export const fetchUpdateCourse = async (id, body) => {
+	try {
+		const { data, status } = await axios.put(`/courses/${id}`, body);
+		if (status === 200) {
+			return data.result;
+		}
+	} catch ({ response: { statusText } }) {
+		toast.error(statusText);
+	}
+};
+
+// ========= AUTHORS ===========
 export const fetchAuthors = async () => {
 	try {
 		const { data, status } = await axios.get('/authors/all');

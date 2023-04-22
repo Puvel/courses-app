@@ -2,15 +2,17 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { SearchBar } from './components/SearchBar/SearchBar';
-import { CourseCard } from './components/CourseCard/CourseCard';
-import { Button } from 'common/Button/Button';
-import { dateСonversion } from 'helpers/dateGenerator';
-import { pipeDuration } from 'helpers/pipeDuration';
-import { authorGenerator } from 'helpers/authorGenerator';
+import { SearchBar, CourseCard } from './components';
+import { Button } from 'common';
+import { pipeDuration, authorGenerator, dateСonversion } from 'helpers';
 import { CREATE_COURSE_PATH } from 'constants';
-import { removeCourse } from 'store/courses/actionCreator';
-import { selectCourses, selectAuthors, selectUser } from 'store/selectors';
+import {
+	selectCourses,
+	selectAuthors,
+	selectUser,
+	setLoading,
+	deleteCourseThunk,
+} from 'store';
 
 import style from './courses.module.css';
 
@@ -35,7 +37,9 @@ export const Courses = () => {
 	};
 
 	const deleteCourse = (id) => {
-		dispatch(removeCourse(id));
+		dispatch(setLoading(true));
+		dispatch(deleteCourseThunk(id));
+		dispatch(setLoading(false));
 	};
 
 	useMemo(() => {

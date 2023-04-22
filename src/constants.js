@@ -12,6 +12,7 @@ export const LOGIN_PATH = 'login';
 export const REGISTRATION_PATH = 'registration';
 export const COURSES_PATH = 'courses';
 export const CREATE_COURSE_PATH = 'courses/add';
+export const UPDATE_COURSE_PATH = 'courses/update/:courseId';
 export const COURSE_PATH = ':courseId';
 export const ERROR_PATH = 'not_found';
 

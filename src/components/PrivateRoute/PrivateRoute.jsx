@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { selectUser } from 'store/selectors';
+import { selectUser } from 'store';
 
 export const PrivateRoute = ({ children }) => {
 	const { role } = useSelector(selectUser);

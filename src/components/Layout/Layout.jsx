@@ -2,9 +2,8 @@ import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
-import { Header } from 'components/Header/Header';
-import { Spinner } from 'components/Spinner/Spinner';
-import { selectLoading } from 'store/selectors';
+import { Header, Spinner } from 'components';
+import { selectLoading } from 'store';
 
 import style from './layout.module.css';
 

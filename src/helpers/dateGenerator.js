@@ -1,10 +1,8 @@
 export const dateСonversion = (value, separator = '.') => {
-	const date = new Date(value);
-	return [
-		String(date.getDate()).padStart(2, '0'),
-		String(+date.getMonth() + 1).padStart(2, '0'),
-		date.getFullYear(),
-	].join(separator);
+	const date = value.split('/');
+	return [date[0].padStart(2, '0'), date[1].padStart(2, '0'), date[2]].join(
+		separator
+	);
 };
 
 export const dateGenerator = (value, separator = '.') => {

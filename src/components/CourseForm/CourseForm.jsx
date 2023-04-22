@@ -1,23 +1,24 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { v4 as uIdv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
-import { Input } from 'common/Input/Input';
-import { Button } from 'common/Button/Button';
-import { AuthorsList } from './components/AuthorsList/AuthorsList';
-import { pipeDuration } from 'helpers/pipeDuration';
-import { dateGenerator } from 'helpers/dateGenerator';
-import { fieldsValidation } from 'helpers/fieldsValidation';
-import { selectAuthors } from 'store/selectors';
-import { addAuthorThunk } from 'store/authors/thunk';
-import { addCourse } from 'store/courses/actionCreator';
+
+import { Input, Button } from 'common';
+import { AuthorsList } from './components/AuthorsList';
+import { pipeDuration, fieldsValidation, fetchGetCourse } from 'helpers';
+import {
+	addCourseThunk,
+	updateCourseThunk,
+	addAuthorThunk,
+	selectAuthors,
+} from 'store';
 import {
 	INPUT_TITLE_ID,
 	INPUT_DESCRIPTION_ID,
 	INPUT_DURATION_ID,
 	INPUT_AUTHOR_ID,
 	COURSES_PATH,
+	ERROR_PATH,
 } from 'constants';
 
 import style from './courseForm.module.css';
@@ -30,14 +31,24 @@ export const CourseForm = () => {
 	const [author, setAuthor] = useState('');
 	const [duration, setDuration] = useState('');
 	const [courseAuthor, setCourseAuthor] = useState([]);
-	const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const navigate = useNavigate();
+	const { courseId } = useParams();
+	const [course, setCourse] = useState(null);
 
-	useEffect(() => {
-		setAvailableAuthors(
-			authors.filter((author) => !courseAuthor.includes(author.id))
-		);
-	}, [authors, courseAuthor]);
+	const getCourse = useCallback(async () => {
+		const data = await fetchGetCourse(courseId);
+		if (data) {
+			setCourse(data);
+			setTitle(data.title);
+			setDescription(data.description);
+			setDuration(data.duration);
+			setCourseAuthor(
+				authors.filter((author) => data.authors.includes(author.id))
+			);
+		} else {
+			navigate(`/${ERROR_PATH}`, { replace: true });
+		}
+	}, [courseId, navigate, authors]);
 
 	const inputsStates = {
 		[INPUT_TITLE_ID]: setTitle,
@@ -47,14 +58,9 @@ export const CourseForm = () => {
 	};
 
 	const setAuthorHandle = (e) => {
-		const author = availableAuthors.find(
-			(author) => author.id === e.target.dataset.id
-		);
+		const author = authors.find((author) => author.id === e.target.dataset.id);
 		if (author) {
 			setCourseAuthor([...courseAuthor, author]);
-			// setAvailableAuthors((prevList) =>
-			// 	prevList.filter((item) => item.id !== author.id)
-			// );
 		}
 	};
 
@@ -63,7 +69,6 @@ export const CourseForm = () => {
 			(author) => author.id === e.target.dataset.id
 		);
 		if (author) {
-			// setAvailableAuthors([...availableAuthors, author]);
 			setCourseAuthor((prevList) =>
 				prevList.filter((item) => item.id !== author.id)
 			);
@@ -90,8 +95,6 @@ export const CourseForm = () => {
 			return;
 		}
 		dispatch(addAuthorThunk({ name: author }));
-
-		// setAvailableAuthors([...availableAuthors, newAuthor]);
 		setAuthor('');
 	};
 
@@ -103,20 +106,27 @@ export const CourseForm = () => {
 			courseAuthor,
 		});
 		if (isValid) {
-			dispatch(
-				addCourse({
-					id: uIdv4(),
-					title,
-					description,
-					creationDate: dateGenerator(new Date(), '/'),
-					duration: +duration,
-					authors: courseAuthor.map(({ id }) => id),
-				})
-			);
+			const formData = {
+				title: title,
+				description: description,
+				duration: +duration,
+				authors: courseAuthor.map(({ id }) => id),
+			};
+			if (course) {
+				dispatch(updateCourseThunk(course.id, formData));
+			} else {
+				dispatch(addCourseThunk(formData));
+			}
 
 			navigate(`/${COURSES_PATH}`);
 		}
 	};
+
+	useEffect(() => {
+		if (courseId) {
+			getCourse();
+		}
+	}, [courseId, getCourse]);
 
 	return (
 		<>
@@ -134,7 +144,9 @@ export const CourseForm = () => {
 					/>
 				</div>
 
-				<Button onClick={createCourseHandle}>Create course</Button>
+				<Button onClick={createCourseHandle}>
+					{course ? 'Update course' : 'Create course'}
+				</Button>
 			</div>
 			<div className={style.courseFormDescription}>
 				<Input
@@ -196,7 +208,11 @@ export const CourseForm = () => {
 						authorBtnClick={setAuthorHandle}
 						authorBtnText='Add author'
 						title='Authors'
-						authors={availableAuthors}
+						authors={authors.filter((author) =>
+							course
+								? !course.authors.includes(author.id)
+								: !courseAuthor.includes(author)
+						)}
 					/>
 					<AuthorsList
 						authorBtnClick={deleteAuthor}
