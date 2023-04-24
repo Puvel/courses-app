@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SearchBar, CourseCard } from './components';
 import { Button } from 'common';
 import { pipeDuration, authorGenerator, dateСonversion } from 'helpers';
-import { CREATE_COURSE_PATH } from 'constants';
 import {
 	selectCourses,
 	selectAuthors,
