@@ -103,8 +103,8 @@ export const fetchAddCourse = async (body) => {
 		if (status === 201) {
 			return data.result;
 		}
-	} catch ({ response: { statusText } }) {
-		toast.error(statusText);
+	} catch ({ response }) {
+		toast.error(response?.statusText);
 	}
 };
 

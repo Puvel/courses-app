@@ -51,12 +51,16 @@ export const Courses = () => {
 			<div className={style.coursesSearch}>
 				<SearchBar searchCourses={searchCourses} />
 				{role === 'admin' && (
-					<Button onClick={() => navigate(`/${CREATE_COURSE_PATH}`)}>
+					<Button
+						onClick={() => {
+							navigate(`/courses/add`);
+						}}
+					>
 						Add new course
 					</Button>
 				)}
 			</div>
-			<ul>
+			<ul data-testid='coursesList'>
 				{foundCourses.map((course) => (
 					<CourseCard
 						key={course.id}

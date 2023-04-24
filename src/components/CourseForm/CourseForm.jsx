@@ -130,7 +130,7 @@ export const CourseForm = () => {
 
 	return (
 		<>
-			<div className={style.courseFormTitleContainer}>
+			<div data-testid='CourseForm' className={style.courseFormTitleContainer}>
 				<div className={style.courseFormInputTitle}>
 					<Input
 						id='title'
@@ -205,6 +205,7 @@ export const CourseForm = () => {
 				</div>
 				<div className={style.courseFormAuthors}>
 					<AuthorsList
+						testsId='allAuthors'
 						authorBtnClick={setAuthorHandle}
 						authorBtnText='Add author'
 						title='Authors'
@@ -215,6 +216,7 @@ export const CourseForm = () => {
 						)}
 					/>
 					<AuthorsList
+						testsId='courseAuthors'
 						authorBtnClick={deleteAuthor}
 						authorBtnText='Delete author'
 						title='Course authors'
