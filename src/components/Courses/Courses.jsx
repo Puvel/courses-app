@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SearchBar, CourseCard } from './components';
 import { Button } from 'common';
 import { pipeDuration, authorGenerator, dateСonversion } from 'helpers';
-import { CREATE_COURSE_PATH } from 'constants';
 import {
 	selectCourses,
 	selectAuthors,
@@ -51,12 +50,16 @@ export const Courses = () => {
 			<div className={style.coursesSearch}>
 				<SearchBar searchCourses={searchCourses} />
 				{role === 'admin' && (
-					<Button onClick={() => navigate(`/${CREATE_COURSE_PATH}`)}>
+					<Button
+						onClick={() => {
+							navigate(`/courses/add`);
+						}}
+					>
 						Add new course
 					</Button>
 				)}
 			</div>
-			<ul>
+			<ul data-testid='coursesList'>
 				{foundCourses.map((course) => (
 					<CourseCard
 						key={course.id}

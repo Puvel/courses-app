@@ -13,20 +13,22 @@ export const CourseCard = ({
 	author,
 	duration,
 	date,
-	deleteCourse,
+	deleteCourse = null,
 }) => {
 	let navigate = useNavigate();
 	const { role } = useSelector(selectUser);
 	return (
-		<li className={style.course}>
+		<li className={style.course} data-testid='CourseCard'>
 			<div className={style.course_description_wrap}>
-				<h4 className={style.course_title}>{title}</h4>
-				<p>{description}</p>
+				{title && <h4 className={style.course_title}>{title}</h4>}
+				{description && <p>{description}</p>}
 			</div>
 			<div className={style.course_info_wrap}>
-				<p className={style.course_author}>Authors: {author}</p>
-				<p className={style.course_duration}>Duration: {duration} hours</p>
-				<p className={style.course_date}>Created: {date}</p>
+				{author && <p className={style.course_author}>Authors: {author}</p>}
+				{duration && (
+					<p className={style.course_duration}>Duration: {duration} hours</p>
+				)}
+				{date && <p className={style.course_date}>Created: {date}</p>}
 				<div className={style.course_btn_wrap}>
 					<Button onClick={() => navigate(`/courses/${id}`)}>
 						Show course

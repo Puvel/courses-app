@@ -72,3 +72,19 @@ export const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 export const emailValidationText = 'is not a valid email address';
 export const passwordValidationText =
 	'Password should least 6 characters long, contains least one lowercase letter, one uppercase letter and one number.';
+
+// =============== TESTS ===================
+export const TEST_COURSE = {
+	title: 'Test course',
+	description: 'Test course description',
+	duration: 125,
+	authors: ['1', '3'],
+	creationDate: '18/04/2023',
+	id: '1',
+};
+
+export const TEST_AUTHORS = [
+	{ id: '1', name: 'Test author1' },
+	{ id: '2', name: 'Test author2' },
+	{ id: '3', name: 'Test author3' },
+];

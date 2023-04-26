@@ -7,6 +7,7 @@ export const AuthorsList = ({
 	authorBtnClick,
 	authorBtnText,
 	authors = [],
+	testsId = '',
 }) => (
 	<div className={style.authors}>
 		<h5 className={style.authorsTitle}>{title}</h5>
@@ -14,6 +15,7 @@ export const AuthorsList = ({
 			<ul className={style.authorsList}>
 				{authors.map((author) => (
 					<li
+						data-testid={testsId}
 						key={` ${Math.random() * 100}_${author.id} `}
 						className={style.authorsItem}
 					>
