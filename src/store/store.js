@@ -5,6 +5,7 @@ import {
 } from 'redux';
 import logger from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 
 import { userReducer } from './user/reducer';
 import { coursesReducer } from './courses/reducer';
@@ -20,5 +21,5 @@ export const rootReducer = combineReducers({
 
 export const store = createStore(
 	rootReducer,
-	composeWithDevTools(applyMiddleware(logger))
+	composeWithDevTools(applyMiddleware(thunk, logger))
 );

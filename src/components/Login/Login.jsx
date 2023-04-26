@@ -2,14 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { Input } from 'common/Input/Input';
-import { Button } from 'common/Button/Button';
-import { validationAuthForm } from 'helpers/fieldsValidation';
-import { fetchLogin } from 'helpers/fetchApi';
+import { Input, Button } from 'common';
+import { validationAuthForm } from 'helpers';
 import { INPUT_EMAIL_ID, REGISTRATION_PATH, COURSES_PATH } from 'constants';
-import { setLoading } from 'store/general/actionCreator';
-import { onLogin } from 'store/user/actionCreator';
-
+import { logInThunk, setLoading } from 'store';
 import style from './login.module.css';
 
 export const Login = () => {
@@ -20,16 +16,16 @@ export const Login = () => {
 
 	const navigate = useNavigate();
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = (e) => {
 		e.preventDefault();
-		dispatch(setLoading(true));
+
 		const isValid = validationAuthForm({ [INPUT_EMAIL_ID]: email });
 		if (isValid) {
-			const data = await fetchLogin({ email, password });
-			dispatch(onLogin(data));
+			dispatch(setLoading(true));
+			dispatch(logInThunk({ email, password }));
+			dispatch(setLoading(false));
 			navigate(`/${COURSES_PATH}`);
 		}
-		dispatch(setLoading(false));
 	};
 
 	return (

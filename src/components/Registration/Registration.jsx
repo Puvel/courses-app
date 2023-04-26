@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { Input } from 'common/Input/Input';
-import { Button } from 'common/Button/Button';
-import { validationAuthForm } from 'helpers/fieldsValidation';
-import { fetchRegister } from 'helpers/fetchApi';
-import { setLoading } from 'store/general/actionCreator';
+import { Input, Button } from 'common';
+import { validationAuthForm } from 'helpers';
+import { registrationThunk, setLoading } from 'store';
 import {
 	INPUT_NAME_ID,
 	INPUT_EMAIL_ID,
@@ -27,19 +25,18 @@ export const Registration = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		dispatch(setLoading(true));
+
 		const isValid = validationAuthForm({
 			[INPUT_NAME_ID]: name,
 			[INPUT_EMAIL_ID]: email,
 			[INPUT_PASSWORD_ID]: password,
 		});
 		if (isValid) {
-			const isSuccess = await fetchRegister({ name, email, password });
-			if (isSuccess) {
-				navigate(`/${LOGIN_PATH}`);
-			}
+			dispatch(setLoading(true));
+			dispatch(registrationThunk({ name, email, password }));
+			dispatch(setLoading(false));
+			navigate(`/${LOGIN_PATH}`);
 		}
-		dispatch(setLoading(false));
 	};
 
 	return (

@@ -2,21 +2,24 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { SearchBar } from './components/SearchBar/SearchBar';
-import { CourseCard } from './components/CourseCard/CourseCard';
-import { Button } from 'common/Button/Button';
-import { dateСonversion } from 'helpers/dateGenerator';
-import { pipeDuration } from 'helpers/pipeDuration';
-import { authorGenerator } from 'helpers/authorGenerator';
+import { SearchBar, CourseCard } from './components';
+import { Button } from 'common';
+import { pipeDuration, authorGenerator, dateСonversion } from 'helpers';
 import { CREATE_COURSE_PATH } from 'constants';
-import { removeCourse } from 'store/courses/actionCreator';
-import { selectCourses, selectAuthors } from 'store/selectors';
+import {
+	selectCourses,
+	selectAuthors,
+	selectUser,
+	setLoading,
+	deleteCourseThunk,
+} from 'store';
 
 import style from './courses.module.css';
 
 export const Courses = () => {
 	const courses = useSelector(selectCourses);
 	const authors = useSelector(selectAuthors);
+	const { role } = useSelector(selectUser);
 	const [foundCourses, setFoundCourses] = useState(courses);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -34,7 +37,9 @@ export const Courses = () => {
 	};
 
 	const deleteCourse = (id) => {
-		dispatch(removeCourse(id));
+		dispatch(setLoading(true));
+		dispatch(deleteCourseThunk(id));
+		dispatch(setLoading(false));
 	};
 
 	useMemo(() => {
@@ -45,9 +50,11 @@ export const Courses = () => {
 		<>
 			<div className={style.coursesSearch}>
 				<SearchBar searchCourses={searchCourses} />
-				<Button onClick={() => navigate(`/${CREATE_COURSE_PATH}`)}>
-					Add new course
-				</Button>
+				{role === 'admin' && (
+					<Button onClick={() => navigate(`/${CREATE_COURSE_PATH}`)}>
+						Add new course
+					</Button>
+				)}
 			</div>
 			<ul>
 				{foundCourses.map((course) => (

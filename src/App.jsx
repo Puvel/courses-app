@@ -2,19 +2,25 @@ import { useEffect, useCallback } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Courses } from './components/Courses/Courses';
-import { Registration } from './components/Registration/Registration';
-import { Login } from 'components/Login/Login';
-import { Layout } from 'components/Layout/Layout';
-import { CourseInfo } from './components/CourseInfo/CourseInfo';
-import { CreateCourse } from './components/CreateCourse/CreateCourse';
-import { NotFoundPage } from './components/NotFoundPage/NotFoundPage';
-import { fetchCourses, fetchAuthors, fetchCheckUser } from 'helpers/fetchApi';
-import { selectUser } from 'store/selectors';
-import { setLoading } from 'store/general/actionCreator';
-import { onLogin, onLogout } from 'store/user/actionCreator';
-import { getCourses } from 'store/courses/actionCreator';
-import { getAuthors } from 'store/authors/actionCreator';
+import {
+	Courses,
+	Registration,
+	Login,
+	Layout,
+	CourseInfo,
+	CourseForm,
+	PrivateRoute,
+	NotFoundPage,
+} from 'components';
+
+import {
+	selectUser,
+	setLoading,
+	chekUserThunk,
+	getCoursesThunk,
+	getAuthorsThunk,
+} from 'store';
+
 import {
 	LOGIN_PATH,
 	REGISTRATION_PATH,
@@ -22,6 +28,7 @@ import {
 	COURSE_PATH,
 	ERROR_PATH,
 	CREATE_COURSE_PATH,
+	UPDATE_COURSE_PATH,
 } from 'constants';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -32,21 +39,14 @@ export const App = () => {
 	const dispatch = useDispatch();
 
 	const getCoursesDate = useCallback(async () => {
-		const courseRes = await fetchCourses();
-		const authorsRes = await fetchAuthors();
-		dispatch(getCourses(courseRes));
-		dispatch(getAuthors(authorsRes));
+		dispatch(getCoursesThunk());
+		dispatch(getAuthorsThunk());
 	}, [dispatch]);
 
 	const chekUser = useCallback(async () => {
 		const token = localStorage.getItem('token');
 		if (token) {
-			const user = await fetchCheckUser(token);
-			if (user) {
-				dispatch(onLogin({ ...user, token: token }));
-			} else {
-				dispatch(onLogout());
-			}
+			dispatch(chekUserThunk(token));
 		}
 	}, [dispatch]);
 
@@ -99,7 +99,21 @@ export const App = () => {
 						path={CREATE_COURSE_PATH}
 						element={
 							isAuth ? (
-								<CreateCourse />
+								<PrivateRoute>
+									<CourseForm />
+								</PrivateRoute>
+							) : (
+								<Navigate to={`/${LOGIN_PATH}`} replace={true} />
+							)
+						}
+					/>
+					<Route
+						path={UPDATE_COURSE_PATH}
+						element={
+							isAuth ? (
+								<PrivateRoute>
+									<CourseForm />
+								</PrivateRoute>
 							) : (
 								<Navigate to={`/${LOGIN_PATH}`} replace={true} />
 							)

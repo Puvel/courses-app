@@ -42,6 +42,7 @@ export const fetchLogin = async (body) => {
 		}
 	}
 };
+
 export const fetchLogout = async () => {
 	try {
 		const { status } = await axios.delete('/logout');
@@ -62,13 +63,18 @@ export const fetchCheckUser = async (token) => {
 
 		if (status === 200) {
 			setToken(token);
-			return { name: data.result.name, email: data.result.email };
+			return {
+				name: data.result.name,
+				email: data.result.email,
+				role: data.result.role,
+			};
 		}
 	} catch ({ response: { status, statusText } }) {
 		toast.error(statusText);
 	}
 };
 
+// ========= COURSES ===========
 export const fetchCourses = async () => {
 	try {
 		const { data, status } = await axios.get('/courses/all');
@@ -80,10 +86,66 @@ export const fetchCourses = async () => {
 	}
 };
 
+export const fetchGetCourse = async (id) => {
+	try {
+		const { data, status } = await axios.get(`/courses/${id}`);
+		if (status === 200) {
+			return data.result;
+		}
+	} catch ({ response: { statusText } }) {
+		toast.error(statusText);
+	}
+};
+
+export const fetchAddCourse = async (body) => {
+	try {
+		const { data, status } = await axios.post('/courses/add', body);
+		if (status === 201) {
+			return data.result;
+		}
+	} catch ({ response: { statusText } }) {
+		toast.error(statusText);
+	}
+};
+
+export const fetchDeleteCourse = async (id) => {
+	try {
+		const { status } = await axios.delete(`/courses/${id}`);
+		if (status === 200) {
+			return true;
+		}
+	} catch ({ response: { statusText } }) {
+		toast.error(statusText);
+	}
+};
+
+export const fetchUpdateCourse = async (id, body) => {
+	try {
+		const { data, status } = await axios.put(`/courses/${id}`, body);
+		if (status === 200) {
+			return data.result;
+		}
+	} catch ({ response: { statusText } }) {
+		toast.error(statusText);
+	}
+};
+
+// ========= AUTHORS ===========
 export const fetchAuthors = async () => {
 	try {
 		const { data, status } = await axios.get('/authors/all');
 		if (status === 200) {
+			return data.result;
+		}
+	} catch ({ response: { statusText } }) {
+		toast.error(statusText);
+	}
+};
+
+export const fetchAddAuthor = async (body) => {
+	try {
+		const { data, status } = await axios.post('/authors/add', body);
+		if (status === 201) {
 			return data.result;
 		}
 	} catch ({ response: { statusText } }) {

@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-import { Button } from 'common/Button/Button';
+import { Button } from 'common';
+import { selectUser } from 'store';
 
 import style from './courseCard.module.css';
 
@@ -14,6 +16,7 @@ export const CourseCard = ({
 	deleteCourse,
 }) => {
 	let navigate = useNavigate();
+	const { role } = useSelector(selectUser);
 	return (
 		<li className={style.course}>
 			<div className={style.course_description_wrap}>
@@ -29,18 +32,26 @@ export const CourseCard = ({
 						Show course
 					</Button>
 
-					<button className={style.course_edit} type='button'>
-						&#9998;
-					</button>
-					<button
-						onClick={() => {
-							deleteCourse(id);
-						}}
-						className={style.course_remove}
-						type='button'
-					>
-						&#128465;
-					</button>
+					{role === 'admin' && (
+						<>
+							<button
+								onClick={() => navigate(`/courses/update/${id}`)}
+								className={style.course_edit}
+								type='button'
+							>
+								&#9998;
+							</button>
+							<button
+								onClick={() => {
+									deleteCourse(id);
+								}}
+								className={style.course_remove}
+								type='button'
+							>
+								&#128465;
+							</button>
+						</>
+					)}
 				</div>
 			</div>
 		</li>
